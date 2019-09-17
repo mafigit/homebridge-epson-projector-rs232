@@ -20,7 +20,7 @@ function noop() {
 
 class Transport extends EventEmitter {
 
-  constructor(port) {
+  constructor(ip, port) {
     super();
 
     this._currentRx = Buffer.alloc(0);
@@ -28,7 +28,8 @@ class Transport extends EventEmitter {
     this._command = 0;
 
     this._port = new net.Socket();
-    this._port(23, '192.168.178.1', this._onSerialPortOpened.bind(this));
+    this._port.connect({port: port, host: ip});
+    this._port.on('connect', this._onSerialPortOpened.bind(this));
     this._port.on('close', this._onSerialPortClosed.bind(this));
     this._port.on('error', this._onSerialPortFailed.bind(this));
     this._port.on('data', this._onSerialPortData.bind(this));
