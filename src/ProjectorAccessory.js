@@ -28,7 +28,7 @@ class ProjectorAccessory {
 
     this._isReachable = false;
 
-    this._device = new Transport(this.config.port);
+    this._device = new Transport(this.config.ip, this.config.port);
     this._device.on('connected', this._onConnected.bind(this));
     this._device.on('disconnected', this._onDisconnected.bind(this));
 

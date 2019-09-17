@@ -2,8 +2,8 @@
 
 const debug = require('debug')('ESCVP21');
 const serial = require('debug')('ESCVP21:serial');
+const net = require('net');
 
-const SerialPort = require('serialport');
 const EventEmitter = require('events').EventEmitter;
 
 const Backoff = require('backoff');
@@ -27,15 +27,8 @@ class Transport extends EventEmitter {
     this._pendingReads = [];
     this._command = 0;
 
-    this._port = new SerialPort(port, {
-      autoOpen: true,
-      baudRate: 9600,
-      dataBits: 8,
-      stopBits: 1,
-      parity: 'none'
-    });
-
-    this._port.on('open', this._onSerialPortOpened.bind(this));
+    this._port = new net.Socket();
+    this._port(23, '192.168.178.1', this._onSerialPortOpened.bind(this));
     this._port.on('close', this._onSerialPortClosed.bind(this));
     this._port.on('error', this._onSerialPortFailed.bind(this));
     this._port.on('data', this._onSerialPortData.bind(this));
@@ -109,7 +102,6 @@ class Transport extends EventEmitter {
         }
       }
 
-
       debug(`Done processing command ${commandId}: response=${JSON.stringify(response)}`);
       if (response === null) {
         throw new Error('Command execution timed out.');
@@ -121,7 +113,6 @@ class Transport extends EventEmitter {
       return response;
     });
   }
-
 
   _sendCommand(cmd) {
     return new Promise((resolve, reject) => {

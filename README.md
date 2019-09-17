@@ -44,7 +44,8 @@ After [Homebridge](https://github.com/nfarina/homebridge) has been installed:
       "devices": [
         {
           "name": "Epson EH-TW7200",
-          "port": "/dev/serial0",
+          "ip": "192.168.178.10",
+          "port": "3020",
           "pollingInterval": 60000
         }
       ]
