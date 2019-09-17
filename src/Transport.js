@@ -204,27 +204,12 @@ class Transport extends EventEmitter {
   }
 
   _drainAndFlush() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       serial('Drain rx queue');
       this._currentRx = Buffer.alloc(0);
       this._pendingReads.forEach(p => p(null));
       this._pendingReads = [];
-
-      this._port.flush(err => {
-        if (err) {
-          reject(err);
-          return;
-        }
-
-        this._port.drain(err => {
-          if (err) {
-            reject(err);
-            return;
-          }
-
-          resolve();
-        });
-      });
+      resolve();
     });
   }
 
